@@ -1,23 +1,69 @@
 <!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta charset="utf-8">
+    <title>좌표로 주소를 얻어내기</title>
+    <style>
+    .map_wrap {position:relative;width:100%;height:350px;}
+    .title {font-weight:bold;display:block;}
+    .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+    #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+    .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+</style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <h2>TEST</h2>
-    <script>
-        function searchPlaces(){
-            const content = document.getElementById('content').value;
-            document.getElementById('content').value='';
-            axios.post('/',contentData={
-                keyword: content,
-            });
-            console.log(content);
-        };
-    </script>
-    <div class="option">
-        <input type="text" id="content" placeholder="검색 장소">
-        <button onclick="searchPlaces()">검색</button>                
-    </div>
+    <div id="map" style="width:100%;height:350px;"></div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=카카오api키&libraries=services"></script>
+<script>
+    var XX=127
+    var YY=36 
+
+    function searchPlaces(){
+        const content = document.getElementById('content').value;
+        document.getElementById('content').value='';
+        axios.post('/',contentData={
+            keyword: content,
+        }).then(response=>{
+            console.log(response.data)
+            XX=Number(response.data.x);
+            YY=Number(response.data.y);
+            setCenter();
+        });
+    }
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(YY, XX), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };  
+
+    // 지도를 생성합니다    
+    var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+    function setCenter() {            
+        // 이동할 위도 경도 위치를 생성합니다 
+        var moveLatLon = new kakao.maps.LatLng(YY, XX);
+        
+        // 지도 중심을 이동 시킵니다
+        map.setCenter(moveLatLon);
+    }
+
+    function panTo() {
+        // 이동할 위도 경도 위치를 생성합니다 
+        var moveLatLon = new kakao.maps.LatLng(YY, XX);
+        
+        // 지도 중심을 부드럽게 이동시킵니다
+        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        map.panTo(moveLatLon);            
+    }
+
+</script>
+<div class="option">
+    <input type="text" id="content" placeholder="검색 장소">
+    <button onclick="searchPlaces()">검색</button>
+
+</div>
+<br/>
 </body>
 </html>
