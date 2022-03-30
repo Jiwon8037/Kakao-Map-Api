@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h2>TEST</h2>
+    <script>
+        function searchPlaces(){
+            const content = document.getElementById('content').value;
+            document.getElementById('content').value='';
+            axios.post('/',contentData={
+                keyword: content,
+            });
+            console.log(content);
+        };
+    </script>
+    <div class="option">
+        <input type="text" id="content" placeholder="검색 장소">
+        <button onclick="searchPlaces()">검색</button>                
+    </div>
+</body>
+</html>
